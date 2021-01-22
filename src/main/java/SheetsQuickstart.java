@@ -23,6 +23,8 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
+// https://developers.google.com/sheets/api/quickstart/java
+
 public class SheetsQuickstart {
     private static final String APPLICATION_NAME = "Google Sheets API Java Quickstart";
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
@@ -34,6 +36,7 @@ public class SheetsQuickstart {
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
         final String spreadsheetId = "1aYKBsScBRVLUFTNR_iB724qNEcT_8cuuAraRsAq_Ge8";
         final String range = "Sheet1!A1:D";
+        System.out.println("https://docs.google.com/spreadsheets/d/" + spreadsheetId + System.lineSeparator());
         List<List<Object>> dataList = readFromSheet(HTTP_TRANSPORT, spreadsheetId, range);
 
         updateValues(HTTP_TRANSPORT, spreadsheetId, "Sheet1!A" + (dataList.size() + 1), dataList);
@@ -45,12 +48,12 @@ public class SheetsQuickstart {
         ValueRange response = service.spreadsheets().values().get(spreadsheetId, range).execute();
         List<List<Object>> values = response.getValues();
         if (values == null || values.isEmpty()) {
-            System.out.println("No data found.");
+            System.out.println("No data found!");
         } else {
             for (List row : values) {
-                // Print columns A and E, which correspond to indices 0 and 4.
+                // Print columns A..D, which correspond to indices 0..3.
                 try {
-                    System.out.printf("%s, %s, %s\n", row.get(0), row.get(1), row.get(2), row.get(3));
+                    System.out.printf("%s, %s, %s, %s\n", row.get(0), row.get(1), row.get(2), row.get(3));
                 } catch (Exception e) {
 
                 }
@@ -59,11 +62,9 @@ public class SheetsQuickstart {
         return values;
     }
 
-    public static UpdateValuesResponse updateValues(NetHttpTransport HTTP_TRANSPORT, String spreadsheetId, String range,
-                                                    List<List<Object>> _values)
+    public static UpdateValuesResponse updateValues(NetHttpTransport HTTP_TRANSPORT, String spreadsheetId, String range, List<List<Object>> _values)
             throws IOException {
-        Sheets service = new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
-                .setApplicationName(APPLICATION_NAME).build();
+        Sheets service = new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT)).setApplicationName(APPLICATION_NAME).build();
 
         // [START sheets_update_values]
 /*
